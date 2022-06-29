@@ -17,3 +17,36 @@
 
 ### 
 
+# 使用
+
+## 部署docker
+
+在项目目录下运行
+
+```
+docker-compose up
+```
+
+运行User服务
+
+```
+cd cmd/user
+sh build.sh
+sh output/bootstrap.sh
+```
+
+运行note服务
+
+```
+cd cmd/note
+sh build.sh
+sh output/bootstrap.sh
+```
+
+运行api服务
+
+```
+cd cmd/api
+chmod +x run.sh
+./run.sh
+```
