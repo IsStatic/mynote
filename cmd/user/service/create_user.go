@@ -20,7 +20,6 @@ import (
 	"crypto/md5"
 	"fmt"
 	"io"
-	"log"
 	"mynote/cmd/user/dal/db"
 	"mynote/idl/userdemo"
 	"mynote/pkg/errno"
@@ -37,7 +36,6 @@ func NewCreateUserService(ctx context.Context) *CreateUserService {
 
 // CreateUser create user info.
 func (s *CreateUserService) CreateUser(req *userdemo.CreateUserRequest) error {
-	log.Println("创建用户")
 	users, err := db.QueryUser(s.ctx, req.UserName)
 	if err != nil {
 		return err

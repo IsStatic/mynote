@@ -43,8 +43,9 @@ func initUserRpc() {
 		log.Fatalf("failed to dial: %v", err)
 	}
 
-	c :=pb.NewUserServiceClient(conn)
+	c := pb.NewUserServiceClient(conn)
 	userClient = c
+
 }
 
 // CreateUser create user info

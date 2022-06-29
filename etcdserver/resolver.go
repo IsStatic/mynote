@@ -41,6 +41,9 @@ func (r *Resolver) ResolveNow(rn resolver.ResolveNowOptions) {
 
 // Close
 func (r *Resolver) Close() {
+	r.cli.Close()
+	r.Close()
+	log.Println("server stop")
 }
 
 // Build to resolver.Resolver
@@ -89,9 +92,9 @@ func (r *Resolver) watch(prefix string) {
 			if err != nil {
 				log.Println("反序列化失败")
 			}
-			log.Println("获得数据：kvs:",resp.Kvs[i].Key,
-				"KvsValue:",resp.Kvs[i].Value,"Kvkey:",
-				kv.Key,"KvValue：",kv.Value)
+			//log.Println("获得数据：kvs:",resp.Kvs[i].Key,
+			//	"KvsValue:",resp.Kvs[i].Value,"Kvkey:",
+			//	kv.Key,"KvValue：",kv.Value)
 			addrDict[string(resp.Kvs[i].Value)] = resolver.Address{Addr: info.IP}
 		}
 	}
