@@ -36,15 +36,18 @@ func initUserRpc() {
 	resolver.Register(r)
 
 	conn, err := grpc.Dial(r.Scheme()+"://"+"/", grpc.WithInsecure(),
-		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`))
+		grpc.WithDefaultServiceConfig(constants.GrpcServiceConfig),
+		grpc.WithInsecure(),
+	)
 
 	//conn, err := grpc.Dial(":8972", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("failed to dial: %v", err)
 	}
 
-	c :=pb.NewUserServiceClient(conn)
+	c := pb.NewUserServiceClient(conn)
 	userClient = c
+
 }
 
 // CreateUser create user info

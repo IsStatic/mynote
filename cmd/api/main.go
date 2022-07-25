@@ -14,6 +14,7 @@ import (
 	"os"
 	"time"
 )
+
 func Init() {
 	tracer.InitJaeger(constants.ApiServiceName)
 	rpc.InitRPC()
@@ -21,7 +22,8 @@ func Init() {
 
 func main() {
 	Init()
-	file,_ := os.Create("access.log")
+	//将日志输出道文件access.log中
+	file, _ := os.Create("access.log")
 	gin.DefaultWriter = file
 	r := gin.New()
 	r.Use(gin.Logger())
@@ -65,7 +67,6 @@ func main() {
 	note1.POST("", handlers.CreateNote)
 	note1.PUT("/:note_id", handlers.UpdateNote)
 	note1.DELETE("/:note_id", handlers.DeleteNote)
-
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		log.Fatal(err)

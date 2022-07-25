@@ -9,6 +9,8 @@ import (
 	"google.golang.org/grpc/resolver"
 	"log"
 	"mynote/pkg/constants"
+	"strconv"
+	"strings"
 )
 
 const schema = constants.Schema
@@ -23,7 +25,6 @@ type Resolver struct {
 }
 
 // NewResolver return resolver builder
-// endpoints example: http://127.0.0.1:2379 http://127.0.0.1:12379 http://127.0.0.1:22379"
 // service is service name
 func NewResolver(endpoints []string, service string) resolver.Builder {
 	return &Resolver{endpoints: endpoints, service: service}
@@ -41,6 +42,9 @@ func (r *Resolver) ResolveNow(rn resolver.ResolveNowOptions) {
 
 // Close
 func (r *Resolver) Close() {
+	r.cli.Close()
+	r.Close()
+	log.Println("server stop")
 }
 
 // Build to resolver.Resolver
@@ -63,16 +67,23 @@ func (r *Resolver) Build(target resolver.Target, cc resolver.ClientConn, opts re
 	return r, nil
 }
 
+type addrAndWeight struct {
+	resolver.Address
+	servicename string
+	weight      int
+}
+
 //监听服务的变化
 func (r *Resolver) watch(prefix string) {
-	addrDict := make(map[string]resolver.Address)
+	addrDict := make(map[string]addrAndWeight)
 
 	update := func() {
 		addrList := make([]resolver.Address, 0, len(addrDict))
 		for _, v := range addrDict {
-			addrList = append(addrList, v)
+			addrList = append(addrList,
+				SetAddrInfo(v.Address, AddrInfo{Weight: v.weight}))
+			log.Println("put key :", v.servicename, "wieght:", v.weight)
 		}
-
 		state := resolver.State{
 			Addresses:     addrList,
 			ServiceConfig: nil,
@@ -89,10 +100,18 @@ func (r *Resolver) watch(prefix string) {
 			if err != nil {
 				log.Println("反序列化失败")
 			}
-			log.Println("获得数据：kvs:",resp.Kvs[i].Key,
-				"KvsValue:",resp.Kvs[i].Value,"Kvkey:",
-				kv.Key,"KvValue：",kv.Value)
-			addrDict[string(resp.Kvs[i].Value)] = resolver.Address{Addr: info.IP}
+			//log.Println("获得数据：kvs:",resp.Kvs[i].Key,
+			//	"KvsValue:",resp.Kvs[i].Value,"Kvkey:",
+			//	kv.Key,"KvValue：",kv.Value)
+			nodeweigth, err := strconv.Atoi(info.Weight)
+			if err != nil {
+				nodeweigth = 1
+			}
+			addrDict[string(resp.Kvs[i].Value)] = addrAndWeight{
+				Address:     resolver.Address{Addr: info.IP},
+				servicename: info.Name,
+				weight:      nodeweigth,
+			}
 		}
 	}
 
@@ -108,7 +127,15 @@ func (r *Resolver) watch(prefix string) {
 				if err != nil {
 					log.Println(err)
 				} else {
-					addrDict[string(ev.Kv.Key)] = resolver.Address{Addr: info.IP}
+					nodeweigth, err := strconv.Atoi(info.Weight)
+					if err != nil {
+						nodeweigth = 1
+					}
+					addrDict[string(ev.Kv.Key)] = addrAndWeight{
+						Address:     resolver.Address{Addr: info.IP},
+						servicename: info.Name,
+						weight:      nodeweigth,
+					}
 				}
 			case mvccpb.DELETE:
 				delete(addrDict, string(ev.PrevKv.Key))
@@ -116,4 +143,19 @@ func (r *Resolver) watch(prefix string) {
 		}
 		update()
 	}
+}
+
+//SetServiceList 设置服务地址
+func (r *Resolver) SetServiceList(key, val string) {
+	//获取服务地址
+	addr := resolver.Address{Addr: strings.TrimPrefix(key, r.service)}
+	//获取服务地址权重
+	nodeWeight, err := strconv.Atoi(val)
+	if err != nil {
+		//非数字字符默认权重为1
+		nodeWeight = 1
+	}
+	//把服务地址权重存储到resolver.Address的元数据中
+	addr = SetAddrInfo(addr, AddrInfo{Weight: nodeWeight})
+	log.Println("put key :", key, "wieght:", val)
 }

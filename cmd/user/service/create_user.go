@@ -37,7 +37,7 @@ func NewCreateUserService(ctx context.Context) *CreateUserService {
 
 // CreateUser create user info.
 func (s *CreateUserService) CreateUser(req *userdemo.CreateUserRequest) error {
-	log.Println("创建用户")
+	log.Println("CreteUser")
 	users, err := db.QueryUser(s.ctx, req.UserName)
 	if err != nil {
 		return err

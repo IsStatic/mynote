@@ -12,8 +12,9 @@ import (
 
 // 服务信息
 type ServiceInfo struct {
-	Name string
-	IP   string
+	Name   string
+	IP     string
+	Weight string
 }
 
 type Service struct {
@@ -85,7 +86,6 @@ func (service *Service) keepAlive() (<-chan *clientv3.LeaseKeepAliveResponse, er
 		log.Fatal(err)
 		return nil, err
 	}
-
 	_, err = service.client.Put(context.TODO(), key, string(val), clientv3.WithLease(resp.ID))
 	if err != nil {
 		log.Fatal(err)

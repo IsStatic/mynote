@@ -12,7 +12,7 @@ import (
 	"mynote/pkg/errno"
 )
 
-var userClient  userdemo.UserServiceClient
+var userClient userdemo.UserServiceClient
 
 func initUserRpc() {
 	r := etcdserver.NewResolver([]string{
@@ -21,13 +21,13 @@ func initUserRpc() {
 	resolver.Register(r)
 
 	conn, err := grpc.Dial(r.Scheme()+"://"+"/", grpc.WithInsecure(),
-		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`))
+		grpc.WithDefaultServiceConfig(constants.GrpcServiceConfig))
 
 	//conn, err := grpc.Dial(":8972", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("failed to dial: %v", err)
 	}
-	c :=pb.NewUserServiceClient(conn)
+	c := pb.NewUserServiceClient(conn)
 	userClient = c
 }
 

@@ -8,6 +8,18 @@
 [GIN-debug] POST   /v1/note                  --> mynote/cmd/api/hendlers.CreateNote (3 handlers)
 [GIN-debug] PUT    /v1/note/:note_id         --> mynote/cmd/api/hendlers.UpdateNote (3 handlers)
 [GIN-debug] DELETE /v1/note/:note_id         --> mynote/cmd/api/hendlers.DeleteNote (3 handlers)
-[GIN] 2022/06/29 - 20:34:13 | 200 |      8.8804ms |             ::1 | POST     "/v1/user/register"
-[GIN] 2022/06/29 - 20:35:35 | 200 |     12.1307ms |             ::1 | POST     "/v1/user/register"
-[GIN] 2022/06/29 - 20:36:48 | 200 |      9.5446ms |             ::1 | POST     "/v1/user/login"
+[GIN] 2022/07/25 - 17:17:39 | 200 |     54.6132ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:17:42 | 200 |     10.4648ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:17:43 | 200 |       846.8µs |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:17:44 | 200 |      1.5857ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:17:50 | 200 |     17.1931ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:17:51 | 200 |      1.6649ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:17:51 | 200 |      1.2646ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:17:53 | 200 |      1.5679ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:17:53 | 200 |      1.1787ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:18:29 | 200 |      1.2828ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:18:30 | 200 |       354.4µs |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:18:31 | 200 |       882.6µs |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:18:33 | 200 |      1.2426ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:18:34 | 200 |      1.3648ms |             ::1 | POST     "/v1/user/register"
+[GIN] 2022/07/25 - 17:18:57 | 200 |      4.2787ms |             ::1 | POST     "/v1/user/login"

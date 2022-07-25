@@ -15,6 +15,7 @@
 
 package rpc
 
+import "C"
 import (
 	"context"
 	"google.golang.org/grpc"
@@ -34,16 +35,17 @@ func initNoteRpc() {
 		constants.EtcdAddress,
 	}, constants.NoteServiceName)
 	resolver.Register(r)
-
 	conn, err := grpc.Dial(r.Scheme()+"://"+"/", grpc.WithInsecure(),
-		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`))
+		grpc.WithDefaultServiceConfig(constants.GrpcServiceConfig),
+		grpc.WithInsecure(),
+	)
 
 	//conn, err := grpc.Dial(":8972", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("failed to dial: %v", err)
 	}
 
-	c :=pb.NewNoteServiceClient(conn)
+	c := pb.NewNoteServiceClient(conn)
 	noteClient = c
 }
 
