@@ -24,15 +24,14 @@ func main() {
 	}
 	Init()
 	server := grpc.NewServer()
-
 	pb.RegisterUserServiceServer(server, new(UserServiceImpl))
 	reflection.Register(server)
-
 	reg, err := etcdserver.NewService(etcdserver.ServiceInfo{
-
-		Name: constants.UserServiceName,
-		IP:   constants.UserAddress, //grpc服务节点ip
+		Name:   constants.UserServiceName,
+		IP:     constants.UserAddress, //grpc服务节点ip
+		Weight: constants.UserWeight,
 	}, []string{constants.EtcdAddress}) // etcd的节点ip
+
 	if err != nil {
 		log.Fatal(err)
 	}

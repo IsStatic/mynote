@@ -33,7 +33,6 @@ func TestName(t *testing.T) {
 		log.Fatal(err)
 	}
 	go reg.Start()
-
 	err = server.Serve(addr)
 	if err != nil {
 		panic(err)
